@@ -84,7 +84,10 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   const cacheSeconds = requestParams.cache ?? 60;
 
   res.setHeader('Cache-Control', `s-maxage=${cacheSeconds}, stale-while-revalidate`);
-  res.json(responseParams);
+  res.json({
+    schemaVersion: 1,
+    ...responseParams
+  });
 };
 
 export default handler;
