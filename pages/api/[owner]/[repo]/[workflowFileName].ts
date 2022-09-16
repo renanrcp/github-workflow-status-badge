@@ -2,38 +2,19 @@ import type { NextApiRequest, NextApiResponse } from 'next';
 import { parse } from 'node-html-parser';
 
 interface ShieldIoParams {
+  schemaVersion: number;
   label: string;
   message: string;
   color: string;
-  labelColor: string;
-  isError: string;
-  namedLogo: string;
-  logoSvg: string;
-  logoColor: string;
-  logoWidth: string;
-  logoPosition: string;
-  style: string;
-  cacheSeconds: string;
 }
 
-interface RequestParams extends ShieldIoParams {
+interface RequestParams {
   owner: string;
   repo: string;
   workflowFileName: string;
   branch: string;
   event: string;
   cache: string;
-}
-
-
-const deleteRequestParamsFromShieldIOParams = (requestParams: RequestParams) => {
-  const requestParamsKeys = Object.keys(requestParams);
-
-  const omitKeys = ['owner', 'repo', 'workflowFileName', 'branch', 'event', 'cache'];
-
-  return requestParamsKeys.reduce((output, key) => (
-    omitKeys.includes(key) ? output : { ...output, [key]: requestParams[key as keyof RequestParams] }
-  ), {} as ShieldIoParams)
 }
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
@@ -62,32 +43,32 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
 
     status = title.split('-')
       .map(element => element.trim())
-      .filter(element => element !== '')[1].toUpperCase();
+      .filter(element => element !== '')[1].toLowerCase();
   } else {
-    status = 'REPO, BRANCH, OR WORKFLOW NOT FOUND';
+    status = 'repo, branch, or workflow not found';
   }
 
-  const responseParams = deleteRequestParamsFromShieldIOParams(requestParams);
+  let color = '';
 
-  if (!requestParams.color) {
-    if (status === 'PASSING') {
-      responseParams.color = '4c1';
-    } else if (status === 'NO STATUS') {
-      responseParams.color = '9f9f9f';
-    } else {
-      responseParams.color = 'e05d44';
-    }
+  if (status === 'passing') {
+    color = '4c1';
+  } else if (status === 'no status') {
+    color = '9f9f9f';
+  } else {
+    color = 'e05d44';
   }
 
-  responseParams.message = status;
+  const responseParams: ShieldIoParams = {
+    schemaVersion: 1,
+    message: status,
+    color: color,
+    label: 'build'
+  };
 
   const cacheSeconds = requestParams.cache ?? 60;
 
   res.setHeader('Cache-Control', `s-maxage=${cacheSeconds}, stale-while-revalidate`);
-  res.json({
-    schemaVersion: 1,
-    ...responseParams
-  });
+  res.json(responseParams);
 };
 
 export default handler;
