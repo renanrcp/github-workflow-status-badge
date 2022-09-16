@@ -1,5 +1,5 @@
 ## Info
-This app was created as alternativa of this [shields.io issue #8416](https://github.com/badges/shields/issues/8146) about github workflow status badge not working for some actions.
+This app was created as alternative of this [shields.io issue #8416](https://github.com/badges/shields/issues/8146) about github workflow status badge not working for some actions.
 
 ## Usage
 
