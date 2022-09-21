@@ -1,9 +1,9 @@
-## Info
+## Introduction
 This app was created as alternative of this [shields.io issue #8416](https://github.com/badges/shields/issues/8146) about github workflow status badge not working for some actions.
 
 ## Usage
 
-To use this app you need to build your url according with the params:
+To use this app you need to build your url according with these params:
 
 `https://github-workflow-status-badge.vercel.app/api/{owner}/{repo}/{workflowFileName}`
 
@@ -37,6 +37,8 @@ Example:
 ___
 
 You can use shields.io params like label, logo, etc; just passing these params before the `url` param
+
+`https://img.shields.io/endpoint?label=BUILD%20STATUS&logo=github&style=for-the-badge&logoWidth=20&labelColor=0d0d0d&url=https://github-workflow-status-badge.vercel.app/api/{owner}/{repo}/{workflowFileName}`
 
 Example:
 `https://img.shields.io/endpoint?label=BUILD%20STATUS&logo=github&style=for-the-badge&logoWidth=20&labelColor=0d0d0d&url=https://github-workflow-status-badge.vercel.app/api/NextAudio/NextAudio/build-test-lint.yml`
