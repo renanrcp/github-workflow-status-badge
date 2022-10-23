@@ -34,6 +34,8 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
 
   const html = await gitHubResponse.text();
 
+  console.log(html);
+
   let status = ''
 
   if (!html.toLowerCase().includes('not found')) {
@@ -41,9 +43,11 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
 
     const title = parsedHtml.getElementsByTagName('title')[0].rawText;
 
-    status = title.split('-')
+    const words = title.split('-')
       .map(element => element.trim())
-      .filter(element => element !== '')[1].toLowerCase();
+      .filter(element => element !== '');
+
+    status = words[words.length - 1].toLowerCase();
   } else {
     status = 'repo, branch, or workflow not found';
   }
